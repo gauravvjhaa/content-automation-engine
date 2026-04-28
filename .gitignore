@@ -1,0 +1,9 @@
+# Credentials — never push
+scripts/config.py
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Data files
+data/*.csv
