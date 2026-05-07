@@ -1,3 +1,4 @@
+from config import CLIENT_CONFIG, OUTPUT_LOG, GROQ_API_KEY
 from flask import Flask, render_template, jsonify, request
 import sys
 import os
@@ -114,6 +115,31 @@ def api_history():
             records = df.tail(10).to_dict('records')
             return jsonify({"success": True, "history": records})
         return jsonify({"success": True, "history": []})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+    
+@app.route('/api/suggest-keywords', methods=['POST'])
+def api_suggest_keywords():
+    try:
+        from groq import Groq
+        data = request.json
+        product = data.get('product', '')
+        groq_client = Groq(api_key=GROQ_API_KEY)
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{
+                "role": "user",
+                "content": f"""Given this product description: "{product}"
+                
+Suggest exactly 7 trending social media search keywords that would be relevant to this product's target audience.
+Return ONLY a comma-separated list of keywords, nothing else.
+Example format: keyword1, keyword2, keyword3, keyword4, keyword5, keyword6, keyword7"""
+            }],
+            max_tokens=100,
+            temperature=0.7
+        )
+        keywords = response.choices[0].message.content.strip()
+        return jsonify({"success": True, "keywords": keywords})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 

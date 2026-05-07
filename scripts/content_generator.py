@@ -43,7 +43,7 @@ Write them now — make them feel real:"""
         model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.8,
-        max_tokens=1200
+        max_tokens=2400
     )
 
     raw = response.choices[0].message.content
