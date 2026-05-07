@@ -8,35 +8,42 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 client = Groq(api_key=GROQ_API_KEY)
 analyzer = SentimentIntensityAnalyzer()
 
-def generate_posts(trend):
+def generate_posts(trend, product_override=None, voice_override=None, min_length=100, max_length=280):
     keyword = trend["keyword"]
     top_post = trend["top_post"]
-    product = CLIENT_CONFIG["product_description"]
-    voice = CLIENT_CONFIG["brand_voice"]
+    product = product_override or CLIENT_CONFIG["product_description"]
+    voice = voice_override or CLIENT_CONFIG["brand_voice"]
 
     print(f"\n  Generating posts for: {keyword}")
 
-    prompt = f"""You are a social media content expert. Generate {POSTS_PER_TREND} different social media posts.
+    length_instruction = f"Each post must be between {min_length} and {max_length} characters."
 
-TRENDING TOPIC: {keyword}
-WHAT PEOPLE ARE SAYING: {top_post}
+    prompt = f"""You are a sharp, witty social media writer — not a corporate bot. You write like a real person who actually cares about the topic.
+
+TRENDING TOPIC RIGHT NOW: {keyword}
+WHAT REAL PEOPLE ARE SAYING: {top_post}
 CLIENT PRODUCT: {product}
 BRAND VOICE: {voice}
 
-Requirements:
-- Each post must be under 280 characters
-- Each post should naturally connect the trending topic to the client's product
-- Do NOT be salesy or pushy — be conversational and relevant
-- Use 1-2 relevant hashtags per post
-- Number each post clearly: POST 1:, POST 2:, POST 3:
+YOUR TASK: Write {POSTS_PER_TREND} completely different social media posts. Each one must:
+- Sound like a real human wrote it — no corporate fluff, no "In today's fast-paced world", no "It's clear that"
+- Actually reference the specific trend context above — not just the keyword
+- Naturally weave in the client product without being pushy or salesy
+- Have a distinct angle: Post 1 = punchy and bold, Post 2 = conversational question, Post 3 = storytelling or insight
+- Use 1-2 relevant hashtags that feel organic, not forced
+- {length_instruction}
 
-Generate the posts now:"""
+BANNED PHRASES (never use these): "In today's world", "It's no secret", "game-changer", "revolutionize", "leverage", "unlock your potential", "fast-paced", "It's clear that", "Now more than ever"
+
+Number each post: POST 1:, POST 2:, POST 3:
+
+Write them now — make them feel real:"""
 
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.8,
-        max_tokens=600
+        max_tokens=1200
     )
 
     raw = response.choices[0].message.content

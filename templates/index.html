@@ -453,11 +453,52 @@
               value="professional yet approachable, forward-thinking, concise"
             />
           </div>
+
           <div class="config-item" style="grid-column: span 2">
             <label>Product Description</label>
             <textarea id="cfg-product">
 An AI-powered productivity tool that helps professionals automate repetitive tasks and focus on creative work.</textarea
             >
+          </div>
+          <div class="config-item" style="grid-column: span 2">
+            <label
+              >Post Length Range —
+              <span id="length-label">100 to 280 characters</span></label
+            >
+            <div
+              style="
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                margin-top: 6px;
+              "
+            >
+              <span style="font-size: 12px; color: #888">Short (100)</span>
+              <input
+                type="range"
+                id="cfg-min-length"
+                min="60"
+                max="200"
+                value="100"
+                style="flex: 1; accent-color: #4ecdc4"
+                oninput="updateLengthLabel()"
+              />
+              <span style="font-size: 12px; color: #888">↔</span>
+              <input
+                type="range"
+                id="cfg-max-length"
+                min="150"
+                max="500"
+                value="280"
+                style="flex: 1; accent-color: #ff6b35"
+                oninput="updateLengthLabel()"
+              />
+              <span style="font-size: 12px; color: #888">Long (500)</span>
+            </div>
+            <div style="font-size: 11px; color: #666; margin-top: 4px">
+              Teal slider = minimum length &nbsp;|&nbsp; Orange slider = maximum
+              length
+            </div>
           </div>
         </div>
       </div>
@@ -553,10 +594,17 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         setStep(1);
         log("Starting trend detection...");
 
-        try {
-          const r = await fetch("/api/detect");
-          const data = await r.json();
+        const keywords = document.getElementById("cfg-keywords").value;
+        const product = document.getElementById("cfg-product").value;
+        const voice = document.getElementById("cfg-voice").value;
 
+        try {
+          const r = await fetch("/api/detect", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ keywords, product, voice }),
+          });
+          const data = await r.json();
           if (data.success) {
             detectedTrends = data.trends;
             log(`Found ${data.trends.length} trending topics`, "success");
@@ -570,7 +618,6 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         } catch (e) {
           log("Error: " + e.message, "error");
         }
-
         btn.innerHTML = "🔍 Detect Trends";
         btn.disabled = false;
       }
@@ -604,8 +651,15 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
           const r = await fetch("/api/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ trends: detectedTrends }),
+            body: JSON.stringify({
+              trends: detectedTrends,
+              product: document.getElementById("cfg-product").value,
+              voice: document.getElementById("cfg-voice").value,
+              min_length: document.getElementById("cfg-min-length").value,
+              max_length: document.getElementById("cfg-max-length").value,
+            }),
           });
+
           const data = await r.json();
 
           if (data.success) {
@@ -737,6 +791,13 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
             }
           }
         } catch (e) {}
+      }
+
+      function updateLengthLabel() {
+        const min = document.getElementById("cfg-min-length").value;
+        const max = document.getElementById("cfg-max-length").value;
+        document.getElementById("length-label").textContent =
+          `${min} to ${max} characters`;
       }
 
       function updateStats() {

@@ -9,7 +9,7 @@ IRRELEVANT_INDICATORS = [
     "dm for", "link in bio only"
 ]
 
-def is_relevant(trend):
+def is_relevant(trend, niche_keywords=None):
     keyword = trend["keyword"].lower()
     top_post = trend["top_post"].lower()
     score = trend["score"]
@@ -23,13 +23,6 @@ def is_relevant(trend):
     for indicator in IRRELEVANT_INDICATORS:
         if indicator in top_post:
             print(f"  Filtered out '{trend['keyword']}' — spam detected")
-            return False
-
-    # Filter out if keyword not matching niche
-    niche_words = [k.lower() for k in CLIENT_CONFIG["niche_keywords"]]
-    if not any(word in keyword for word in niche_words):
-        if score < 200:
-            print(f"  Filtered out '{trend['keyword']}' — low relevance")
             return False
 
     return True
