@@ -643,7 +643,7 @@
               ></label
             >
             <textarea id="cfg-product">
-An AI-powered productivity tool that helps professionals automate repetitive tasks and focus on creative work.</textarea
+A platform that automates social media content by detecting trends early and generating humorous, high‑engagement posts—saving creators hours every week.</textarea
             >
           </div>
 
@@ -657,7 +657,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
             <input
               type="text"
               id="cfg-keywords"
-              value="artificial intelligence, machine learning, ChatGPT, OpenAI, LLM"
+              value="social media automation, content automation, trend spotting, AI content, creator tools"
             />
           </div>
 
@@ -798,95 +798,97 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         <div id="posts-list"></div>
       </div>
 
-      <!-- Publish Box -->
-      <div class="section" id="publish-section" style="display: none">
-        <div class="section-title">
-          <div class="section-title-left">🚀 Ready to Publish</div>
-        </div>
+<!-- Publish Box -->
+<div class="section" id="publish-section" style="display: none">
+  <div class="publish-box">
+    <div class="section-title">
+      <div class="section-title-left">🚀 Ready to Publish</div>
+    </div>
 
-        <!-- Post Preview -->
-        <div class="post-preview">
-          <div class="preview-header">
-            <div class="preview-avatar">V</div>
-            <div>
-              <div class="preview-name">Vishwajeet Yaduraj</div>
-              <div class="preview-handle">
-                @vishuyadav.bsky.social · just now
-              </div>
-            </div>
-            <div style="margin-left: auto" id="timing-indicator"></div>
-          </div>
-          <div class="preview-text" id="preview-post-text"></div>
-          <div class="preview-actions">
-            <span>💬 Reply</span>
-            <span>🔁 Repost</span>
-            <span>❤️ Like</span>
-            <span>📤 Share</span>
+    <!-- Post Preview -->
+    <div class="post-preview">
+      <div class="preview-header">
+        <div class="preview-avatar">V</div>
+        <div>
+          <div class="preview-name">Vishwajeet Yaduraj</div>
+          <div class="preview-handle">
+            @vishuyadav.bsky.social · just now
           </div>
         </div>
+        <div style="margin-left: auto" id="timing-indicator"></div>
+      </div>
+      <div class="preview-text" id="preview-post-text"></div>
+      <div class="preview-actions">
+        <span>💬 Reply</span>
+        <span>🔁 Repost</span>
+        <span>❤️ Like</span>
+        <span>📤 Share</span>
+      </div>
+    </div>
 
-        <!-- Media suggestions -->
-        <div id="media-section" style="display: none">
-          <div
-            style="
-              font-size: 0.8rem;
-              color: var(--subtext);
-              margin-bottom: 0.5rem;
-            "
-          >
-            📸 Suggested visuals for this post:
-          </div>
-          <div class="media-suggestions" id="media-list"></div>
+    <!-- Media suggestions -->
+    <div id="media-section" style="display: none">
+      <div
+        style="
+          font-size: 0.8rem;
+          color: var(--subtext);
+          margin-bottom: 0.5rem;
+        "
+      >
+        📸 Suggested visuals for this post:
+      </div>
+      <div class="media-suggestions" id="media-list"></div>
+    </div>
+
+    <!-- Publish actions -->
+    <div class="publish-actions">
+      <button class="btn btn-success" onclick="runPublish()">
+        Publish to Bluesky
+      </button>
+
+      <!-- Platform icons -->
+      <div class="platform-icons">
+        <div class="platform-icon active" title="Bluesky">
+          🦋
+          <div class="tooltip">Bluesky — Active</div>
         </div>
-
-        <!-- Publish actions -->
-        <div class="publish-actions">
-          <button class="btn btn-success" onclick="runPublish()">
-            Publish to Bluesky
-          </button>
-
-          <!-- Platform icons -->
-          <div class="platform-icons">
-            <div class="platform-icon active" title="Bluesky">
-              🦋
-              <div class="tooltip">Bluesky — Active</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'Twitter/X')"
-            >
-              𝕏
-              <div class="tooltip">Twitter/X — Coming Soon</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'Instagram')"
-            >
-              📸
-              <div class="tooltip">Instagram — Coming Soon</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'LinkedIn')"
-            >
-              in
-              <div class="tooltip">LinkedIn — Coming Soon</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'Facebook')"
-            >
-              f
-              <div class="tooltip">Facebook — Coming Soon</div>
-            </div>
-          </div>
-
-          <span
-            style="font-size: 0.8rem; color: var(--subtext)"
-            id="publish-meta"
-          ></span>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Twitter/X')"
+        >
+          𝕏
+          <div class="tooltip">Twitter/X — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Instagram')"
+        >
+          📸
+          <div class="tooltip">Instagram — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'LinkedIn')"
+        >
+          in
+          <div class="tooltip">LinkedIn — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Facebook')"
+        >
+          f
+          <div class="tooltip">Facebook — Coming Soon</div>
         </div>
       </div>
+
+      <span
+        style="font-size: 0.8rem; color: var(--subtext)"
+        id="publish-meta"
+      ></span>
+    </div>
+  </div>
+</div>
 
       <!-- History -->
       <div class="section">
@@ -900,6 +902,9 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
     </div>
 
     <script>
+      const API_BASE_URL = "https://slp-social-media-engine.onrender.com";
+      const apiFetch = (path, options = {}) => fetch(`${API_BASE_URL}${path}`, options);
+
       let detectedTrends = [];
       let generatedPosts = [];
       let selectedPost = null;
@@ -935,7 +940,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         }
         log("Suggesting keywords from product description...");
         try {
-          const r = await fetch("/api/suggest-keywords", {
+          const r = await apiFetch("/api/suggest-keywords", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ product }),
@@ -979,7 +984,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         const product = document.getElementById("cfg-product").value;
         const voice = getSelectedVoice();
         try {
-          const r = await fetch("/api/detect", {
+          const r = await apiFetch("/api/detect", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ keywords, product, voice }),
@@ -1028,7 +1033,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         setStep(2);
         log("Generating AI posts for trending topics...");
         try {
-          const r = await fetch("/api/generate", {
+          const r = await apiFetch("/api/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1184,7 +1189,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         btn.disabled = true;
         log("Publishing to Bluesky...");
         try {
-          const r = await fetch("/api/publish", {
+          const r = await apiFetch("/api/publish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ post: selectedPost }),
@@ -1223,7 +1228,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
       // ── History ────────────────────────────────────────────────
       async function loadHistory() {
         try {
-          const r = await fetch("/api/history");
+          const r = await apiFetch("/api/history");
           const data = await r.json();
           const list = document.getElementById("history-list");
           if (data.success && data.history.length > 0) {

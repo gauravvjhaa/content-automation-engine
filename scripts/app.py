@@ -1,9 +1,10 @@
-from config import CLIENT_CONFIG, OUTPUT_LOG, GROQ_API_KEY
-from flask import Flask, render_template, jsonify, request
-import sys
 import os
+import sys
+
 sys.path.append(os.path.dirname(__file__))
-from config import CLIENT_CONFIG, OUTPUT_LOG
+
+from flask import Flask, jsonify, request
+from config import CLIENT_CONFIG, OUTPUT_LOG, GROQ_API_KEY
 from trend_detector import login, fetch_posts, score_trend
 from trend_filter import is_relevant
 from content_generator import generate_posts, score_posts
@@ -11,9 +12,19 @@ from publisher import publish_post, log_publish
 import pandas as pd
 from datetime import datetime
 
-app = Flask(__name__,
-            template_folder='../templates',
-            static_folder='../static')
+app = Flask(__name__)
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        return app.make_default_options_response()
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
 
 def detect_with_config(keywords, product, voice):
     token = login()
@@ -38,15 +49,15 @@ def detect_with_config(keywords, product, voice):
         })
 
     trends.sort(key=lambda x: x["score"], reverse=True)
-    
+
     filtered = [t for t in trends[:3] if is_relevant(t, keywords)]
     if not filtered:
         filtered = trends[:1]
     return filtered
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route("/")
+def health():
+    return jsonify({"status": "ok"})
 
 @app.route('/api/detect', methods=['POST'])
 def api_detect():
@@ -67,7 +78,7 @@ def api_detect():
 @app.route('/api/generate', methods=['POST'])
 def api_generate():
     try:
-        data = request.json
+        data = request.json or {}
         trends = data.get('trends', [])
         product = data.get('product', CLIENT_CONFIG['product_description'])
         voice = data.get('voice', CLIENT_CONFIG['brand_voice'])
@@ -92,9 +103,9 @@ def api_generate():
 @app.route('/api/publish', methods=['POST'])
 def api_publish():
     try:
-        data = request.json
+        data = request.json or {}
         post = data.get('post', {})
-        uri = publish_post(post['text'])
+        uri = publish_post(post.get('text', ''))
         if uri:
             log_publish(post, uri)
             return jsonify({
@@ -117,12 +128,12 @@ def api_history():
         return jsonify({"success": True, "history": []})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
-    
+
 @app.route('/api/suggest-keywords', methods=['POST'])
 def api_suggest_keywords():
     try:
         from groq import Groq
-        data = request.json
+        data = request.json or {}
         product = data.get('product', '')
         groq_client = Groq(api_key=GROQ_API_KEY)
         response = groq_client.chat.completions.create(
@@ -130,7 +141,7 @@ def api_suggest_keywords():
             messages=[{
                 "role": "user",
                 "content": f"""Given this product description: "{product}"
-                
+
 Suggest exactly 7 trending social media search keywords that would be relevant to this product's target audience.
 Return ONLY a comma-separated list of keywords, nothing else.
 Example format: keyword1, keyword2, keyword3, keyword4, keyword5, keyword6, keyword7"""
@@ -144,4 +155,5 @@ Example format: keyword1, keyword2, keyword3, keyword4, keyword5, keyword6, keyw
         return jsonify({"success": False, "error": str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
