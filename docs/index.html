@@ -798,95 +798,97 @@ A platform that automates social media content by detecting trends early and gen
         <div id="posts-list"></div>
       </div>
 
-      <!-- Publish Box -->
-      <div class="section" id="publish-section" style="display: none">
-        <div class="section-title">
-          <div class="section-title-left">🚀 Ready to Publish</div>
-        </div>
+<!-- Publish Box -->
+<div class="section" id="publish-section" style="display: none">
+  <div class="publish-box">
+    <div class="section-title">
+      <div class="section-title-left">🚀 Ready to Publish</div>
+    </div>
 
-        <!-- Post Preview -->
-        <div class="post-preview">
-          <div class="preview-header">
-            <div class="preview-avatar">V</div>
-            <div>
-              <div class="preview-name">Vishwajeet Yaduraj</div>
-              <div class="preview-handle">
-                @vishuyadav.bsky.social · just now
-              </div>
-            </div>
-            <div style="margin-left: auto" id="timing-indicator"></div>
-          </div>
-          <div class="preview-text" id="preview-post-text"></div>
-          <div class="preview-actions">
-            <span>💬 Reply</span>
-            <span>🔁 Repost</span>
-            <span>❤️ Like</span>
-            <span>📤 Share</span>
+    <!-- Post Preview -->
+    <div class="post-preview">
+      <div class="preview-header">
+        <div class="preview-avatar">V</div>
+        <div>
+          <div class="preview-name">Vishwajeet Yaduraj</div>
+          <div class="preview-handle">
+            @vishuyadav.bsky.social · just now
           </div>
         </div>
+        <div style="margin-left: auto" id="timing-indicator"></div>
+      </div>
+      <div class="preview-text" id="preview-post-text"></div>
+      <div class="preview-actions">
+        <span>💬 Reply</span>
+        <span>🔁 Repost</span>
+        <span>❤️ Like</span>
+        <span>📤 Share</span>
+      </div>
+    </div>
 
-        <!-- Media suggestions -->
-        <div id="media-section" style="display: none">
-          <div
-            style="
-              font-size: 0.8rem;
-              color: var(--subtext);
-              margin-bottom: 0.5rem;
-            "
-          >
-            📸 Suggested visuals for this post:
-          </div>
-          <div class="media-suggestions" id="media-list"></div>
+    <!-- Media suggestions -->
+    <div id="media-section" style="display: none">
+      <div
+        style="
+          font-size: 0.8rem;
+          color: var(--subtext);
+          margin-bottom: 0.5rem;
+        "
+      >
+        📸 Suggested visuals for this post:
+      </div>
+      <div class="media-suggestions" id="media-list"></div>
+    </div>
+
+    <!-- Publish actions -->
+    <div class="publish-actions">
+      <button class="btn btn-success" onclick="runPublish()">
+        Publish to Bluesky
+      </button>
+
+      <!-- Platform icons -->
+      <div class="platform-icons">
+        <div class="platform-icon active" title="Bluesky">
+          🦋
+          <div class="tooltip">Bluesky — Active</div>
         </div>
-
-        <!-- Publish actions -->
-        <div class="publish-actions">
-          <button class="btn btn-success" onclick="runPublish()">
-            Publish to Bluesky
-          </button>
-
-          <!-- Platform icons -->
-          <div class="platform-icons">
-            <div class="platform-icon active" title="Bluesky">
-              🦋
-              <div class="tooltip">Bluesky — Active</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'Twitter/X')"
-            >
-              𝕏
-              <div class="tooltip">Twitter/X — Coming Soon</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'Instagram')"
-            >
-              📸
-              <div class="tooltip">Instagram — Coming Soon</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'LinkedIn')"
-            >
-              in
-              <div class="tooltip">LinkedIn — Coming Soon</div>
-            </div>
-            <div
-              class="platform-icon"
-              onclick="showComingSoon(this, 'Facebook')"
-            >
-              f
-              <div class="tooltip">Facebook — Coming Soon</div>
-            </div>
-          </div>
-
-          <span
-            style="font-size: 0.8rem; color: var(--subtext)"
-            id="publish-meta"
-          ></span>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Twitter/X')"
+        >
+          𝕏
+          <div class="tooltip">Twitter/X — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Instagram')"
+        >
+          📸
+          <div class="tooltip">Instagram — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'LinkedIn')"
+        >
+          in
+          <div class="tooltip">LinkedIn — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Facebook')"
+        >
+          f
+          <div class="tooltip">Facebook — Coming Soon</div>
         </div>
       </div>
+
+      <span
+        style="font-size: 0.8rem; color: var(--subtext)"
+        id="publish-meta"
+      ></span>
+    </div>
+  </div>
+</div>
 
       <!-- History -->
       <div class="section">
