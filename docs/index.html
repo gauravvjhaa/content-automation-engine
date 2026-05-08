@@ -900,6 +900,9 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
     </div>
 
     <script>
+      const API_BASE_URL = "https://slp-social-media-engine.onrender.com";
+      const apiFetch = (path, options = {}) => fetch(`${API_BASE_URL}${path}`, options);
+
       let detectedTrends = [];
       let generatedPosts = [];
       let selectedPost = null;
@@ -935,7 +938,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         }
         log("Suggesting keywords from product description...");
         try {
-          const r = await fetch("/api/suggest-keywords", {
+          const r = await apiFetch("/api/suggest-keywords", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ product }),
@@ -979,7 +982,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         const product = document.getElementById("cfg-product").value;
         const voice = getSelectedVoice();
         try {
-          const r = await fetch("/api/detect", {
+          const r = await apiFetch("/api/detect", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ keywords, product, voice }),
@@ -1028,7 +1031,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         setStep(2);
         log("Generating AI posts for trending topics...");
         try {
-          const r = await fetch("/api/generate", {
+          const r = await apiFetch("/api/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1184,7 +1187,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
         btn.disabled = true;
         log("Publishing to Bluesky...");
         try {
-          const r = await fetch("/api/publish", {
+          const r = await apiFetch("/api/publish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ post: selectedPost }),
@@ -1223,7 +1226,7 @@ An AI-powered productivity tool that helps professionals automate repetitive tas
       // ── History ────────────────────────────────────────────────
       async function loadHistory() {
         try {
-          const r = await fetch("/api/history");
+          const r = await apiFetch("/api/history");
           const data = await r.json();
           const list = document.getElementById("history-list");
           if (data.success && data.history.length > 0) {
