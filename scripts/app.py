@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(__file__))
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from config import CLIENT_CONFIG, OUTPUT_LOG, GROQ_API_KEY
 from trend_detector import login, fetch_posts, score_trend
 from trend_filter import is_relevant
@@ -56,8 +56,8 @@ def detect_with_config(keywords, product, voice):
     return filtered
 
 @app.route("/")
-def health():
-    return jsonify({"status": "ok"})
+def index():
+    return render_template('index.html')
 
 @app.route('/api/detect', methods=['POST'])
 def api_detect():

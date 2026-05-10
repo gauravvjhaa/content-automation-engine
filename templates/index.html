@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrendEngine — AI Social Media Automation</title>
+    <style>
+      :root[data-theme="dark"] {
+        --bg: #0f0f1a;
+        --surface: #1a1a2e;
+        --border: #2a2a4a;
+        --text: #e0e0e0;
+        --subtext: #888;
+        --log-bg: #0a0a14;
+        --card-hover: #4ecdc420;
+        --input-bg: #0f0f1a;
+      }
+      :root[data-theme="light"] {
+        --bg: #f0f2f8;
+        --surface: #ffffff;
+        --border: #dde2f0;
+        --text: #1a1a2e;
+        --subtext: #666;
+        --log-bg: #e8eaf0;
+        --card-hover: #4ecdc420;
+        --input-bg: #f8f9ff;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+      .header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #4ecdc4;
+      }
+      .logo span {
+        color: #ff6b35;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #4ecdc4;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .theme-btn {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 20px;
+        padding: 4px 12px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .theme-btn:hover {
+        border-color: #4ecdc4;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .pipeline {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .step-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+      }
+      .step-card.active {
+        border-color: #4ecdc4;
+      }
+      .step-num {
+        font-size: 0.75rem;
+        color: #4ecdc4;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+      }
+      .step-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .step-desc {
+        font-size: 0.8rem;
+        color: var(--subtext);
+        line-height: 1.5;
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: #4ecdc4;
+        color: #0f0f1a;
+      }
+      .btn-primary:hover {
+        background: #3dbdb4;
+      }
+      .btn-primary:disabled {
+        background: #2a4a48;
+        color: #666;
+        cursor: not-allowed;
+      }
+      .btn-success {
+        background: #ff6b35;
+        color: white;
+      }
+      .btn-success:hover {
+        background: #e55a25;
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid #4ecdc4;
+        color: #4ecdc4;
+      }
+      .btn-outline:hover {
+        background: #4ecdc420;
+      }
+      .btn-sm {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.8rem;
+        border-radius: 6px;
+      }
+      .section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #4ecdc4;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .section-title-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .trend-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+      .trend-card {
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+      .trend-keyword {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+      }
+      .trend-score {
+        font-size: 0.75rem;
+        color: #4ecdc4;
+        margin-bottom: 0.5rem;
+      }
+      .trend-preview {
+        font-size: 0.75rem;
+        color: var(--subtext);
+        line-height: 1.4;
+      }
+      .score-bar {
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        margin: 0.5rem 0;
+      }
+      .score-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4ecdc4, #ff6b35);
+        border-radius: 2px;
+      }
+      .post-card {
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .post-card:hover {
+        border-color: #4ecdc4;
+      }
+      .post-card.selected {
+        border-color: #ff6b35;
+        background: #1a0f0a;
+      }
+      .post-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+        color: var(--text);
+      }
+      .post-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        color: var(--subtext);
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+      .badge-teal {
+        background: #4ecdc420;
+        color: #4ecdc4;
+      }
+      .badge-orange {
+        background: #ff6b3520;
+        color: #ff6b35;
+      }
+      .badge-green {
+        background: #4ade8020;
+        color: #4ade80;
+      }
+      .publish-box {
+        background: var(--input-bg);
+        border: 2px solid #ff6b35;
+        border-radius: 12px;
+        padding: 1.5rem;
+      }
+      .post-preview {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      .preview-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 0.75rem;
+      }
+      .preview-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4ecdc4, #ff6b35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+      .preview-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .preview-handle {
+        font-size: 0.75rem;
+        color: var(--subtext);
+      }
+      .preview-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+      }
+      .preview-actions {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--subtext);
+      }
+      .preview-actions span {
+        cursor: pointer;
+      }
+      .preview-actions span:hover {
+        color: #4ecdc4;
+      }
+      .publish-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+      .platform-icons {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .platform-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        position: relative;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        transition: all 0.2s;
+      }
+      .platform-icon:hover .tooltip {
+        display: block;
+      }
+      .platform-icon.active {
+        border-color: #4ecdc4;
+        background: #4ecdc420;
+      }
+      .tooltip {
+        display: none;
+        position: absolute;
+        bottom: 38px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1a1a2e;
+        color: white;
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        z-index: 10;
+      }
+      .history-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .history-item:last-child {
+        border-bottom: none;
+      }
+      .history-text {
+        font-size: 0.85rem;
+        color: var(--text);
+        flex: 1;
+        margin-right: 1rem;
+      }
+      .history-meta {
+        font-size: 0.75rem;
+        color: var(--subtext);
+        text-align: right;
+        white-space: nowrap;
+      }
+      .log {
+        background: var(--log-bg);
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: #4ecdc4;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+      .log-line {
+        margin-bottom: 4px;
+      }
+      .log-line.error {
+        color: #ff6b35;
+      }
+      .log-line.success {
+        color: #4ade80;
+      }
+      .empty {
+        text-align: center;
+        color: #444;
+        padding: 2rem;
+        font-size: 0.9rem;
+      }
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #4ecdc4;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 8px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+      }
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #4ecdc4;
+      }
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--subtext);
+        margin-top: 4px;
+      }
+      .config-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .config-item label {
+        font-size: 0.8rem;
+        color: var(--subtext);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .config-item input,
+      .config-item textarea {
+        width: 100%;
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        color: var(--text);
+        font-size: 0.85rem;
+        resize: vertical;
+      }
+      .config-item textarea {
+        min-height: 80px;
+      }
+      .suggest-btn {
+        font-size: 11px;
+        color: #4ecdc4;
+        background: transparent;
+        border: 1px solid #4ecdc4;
+        border-radius: 4px;
+        padding: 2px 8px;
+        cursor: pointer;
+        margin-left: 8px;
+      }
+      .suggest-btn:hover {
+        background: #4ecdc420;
+      }
+      .voice-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      .voice-chip {
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--input-bg);
+        color: var(--subtext);
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .voice-chip.selected {
+        border-color: #4ecdc4;
+        background: #4ecdc420;
+        color: #4ecdc4;
+        font-weight: 600;
+      }
+      .media-suggestions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 0.75rem;
+      }
+      .media-chip {
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        color: var(--subtext);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .timing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .timing-now {
+        background: #4ade8020;
+        color: #4ade80;
+      }
+      .timing-wait {
+        background: #fbbf2420;
+        color: #fbbf24;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">Trend<span>Engine</span></div>
+      <div class="header-right">
+        <span style="font-size: 0.85rem; color: var(--subtext)">
+          <span class="status-dot"></span>AI-Powered Social Media Automation
+        </span>
+        <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">
+          🌙 Dark
+        </button>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-posts">—</div>
+          <div class="stat-label">Posts Published</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-trends">—</div>
+          <div class="stat-label">Trends Detected</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-score">—</div>
+          <div class="stat-label">Avg Post Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-time">—</div>
+          <div class="stat-label">Last Published</div>
+        </div>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="pipeline">
+        <div class="step-card" id="step1-card">
+          <div class="step-num">Step 1</div>
+          <div class="step-title">Trend Detection</div>
+          <div class="step-desc">
+            Scan Bluesky for trending topics in your niche. Score by engagement
+            velocity.
+          </div>
+        </div>
+        <div class="step-card" id="step2-card">
+          <div class="step-num">Step 2</div>
+          <div class="step-title">Content Generation</div>
+          <div class="step-desc">
+            AI generates 5 posts per trend. Product-trend fusion creates
+            relevant content.
+          </div>
+        </div>
+        <div class="step-card" id="step3-card">
+          <div class="step-num">Step 3</div>
+          <div class="step-title">Auto Publish</div>
+          <div class="step-desc">
+            Select your favourite post and publish to any platform within
+            minutes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Config -->
+      <div class="section">
+        <div class="section-title">
+          <div class="section-title-left">⚙️ Client Configuration</div>
+        </div>
+        <div class="config-grid">
+          <div class="config-item" style="grid-column: span 2">
+            <label
+              >Product Description
+              <span style="color: var(--subtext); font-size: 11px"
+                >(fill this first — everything else can be auto-suggested)</span
+              ></label
+            >
+            <textarea id="cfg-product">
+A platform that automates social media content by detecting trends early and generating humorous, high‑engagement posts—saving creators hours every week.</textarea
+            >
+          </div>
+
+          <div class="config-item" style="grid-column: span 2">
+            <label>
+              Niche Keywords (comma separated)
+              <button class="suggest-btn" onclick="suggestKeywords()">
+                ✨ Auto-suggest from product
+              </button>
+            </label>
+            <input
+              type="text"
+              id="cfg-keywords"
+              value="social media automation, content automation, trend spotting, AI content, creator tools"
+            />
+          </div>
+
+          <div class="config-item" style="grid-column: span 2">
+            <label
+              >Brand Voice —
+              <span style="font-size: 11px; color: var(--subtext)"
+                >click to select (multiple allowed)</span
+              ></label
+            >
+            <div class="voice-grid" id="voice-grid">
+              <div class="voice-chip" onclick="toggleVoice(this)">
+                Professional
+              </div>
+              <div class="voice-chip selected" onclick="toggleVoice(this)">
+                Casual
+              </div>
+              <div class="voice-chip" onclick="toggleVoice(this)">Witty</div>
+              <div class="voice-chip selected" onclick="toggleVoice(this)">
+                Bold
+              </div>
+              <div class="voice-chip" onclick="toggleVoice(this)">
+                Empathetic
+              </div>
+              <div class="voice-chip" onclick="toggleVoice(this)">
+                Authoritative
+              </div>
+              <div class="voice-chip selected" onclick="toggleVoice(this)">
+                Playful
+              </div>
+              <div class="voice-chip" onclick="toggleVoice(this)">Minimal</div>
+              <div class="voice-chip" onclick="toggleVoice(this)">
+                Inspirational
+              </div>
+              <div class="voice-chip" onclick="toggleVoice(this)">Edgy</div>
+              <div class="voice-chip" onclick="toggleVoice(this)">
+                Informative
+              </div>
+              <div class="voice-chip" onclick="toggleVoice(this)">Humorous</div>
+            </div>
+          </div>
+
+          <div class="config-item" style="grid-column: span 2">
+            <label
+              >Post Length Range —
+              <span id="length-label">100 to 280 characters</span></label
+            >
+            <div
+              style="
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                margin-top: 6px;
+              "
+            >
+              <span style="font-size: 12px; color: var(--subtext)"
+                >Short (60)</span
+              >
+              <input
+                type="range"
+                id="cfg-min-length"
+                min="60"
+                max="200"
+                value="100"
+                style="flex: 1; accent-color: #4ecdc4"
+                oninput="updateLengthLabel()"
+              />
+              <span style="font-size: 12px; color: var(--subtext)">↔</span>
+              <input
+                type="range"
+                id="cfg-max-length"
+                min="150"
+                max="500"
+                value="280"
+                style="flex: 1; accent-color: #ff6b35"
+                oninput="updateLengthLabel()"
+              />
+              <span style="font-size: 12px; color: var(--subtext)"
+                >Long (500)</span
+              >
+            </div>
+            <div
+              style="font-size: 11px; color: var(--subtext); margin-top: 4px"
+            >
+              Teal = minimum &nbsp;|&nbsp; Orange = maximum
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div
+        style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap"
+      >
+        <button class="btn btn-primary" id="btn-detect" onclick="runDetect()">
+          🔍 Detect Trends
+        </button>
+        <button
+          class="btn btn-outline"
+          id="btn-generate"
+          onclick="runGenerate()"
+          disabled
+        >
+          ✨ Generate Posts
+        </button>
+      </div>
+
+      <!-- Log -->
+      <div class="section" style="margin-bottom: 1.5rem">
+        <div class="section-title">
+          <div class="section-title-left">📋 Activity Log</div>
+        </div>
+        <div class="log" id="log">
+          <div class="log-line">
+            System ready. Click "Detect Trends" to begin.
+          </div>
+        </div>
+      </div>
+
+      <!-- Trends -->
+      <div class="section" id="trends-section" style="display: none">
+        <div class="section-title">
+          <div class="section-title-left">📈 Trending Topics</div>
+        </div>
+        <div class="trend-grid" id="trends-grid"></div>
+      </div>
+
+      <!-- Generated Posts -->
+      <div class="section" id="posts-section" style="display: none">
+        <div class="section-title">
+          <div class="section-title-left">
+            ✍️ Generated Posts — Click to select
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="runGenerate()">
+            🔄 Regenerate
+          </button>
+        </div>
+        <div id="posts-list"></div>
+      </div>
+
+<!-- Publish Box -->
+<div class="section" id="publish-section" style="display: none">
+  <div class="publish-box">
+    <div class="section-title">
+      <div class="section-title-left">🚀 Ready to Publish</div>
+    </div>
+
+    <!-- Post Preview -->
+    <div class="post-preview">
+      <div class="preview-header">
+        <div class="preview-avatar">V</div>
+        <div>
+          <div class="preview-name">Vishwajeet Yaduraj</div>
+          <div class="preview-handle">
+            @vishuyadav.bsky.social · just now
+          </div>
+        </div>
+        <div style="margin-left: auto" id="timing-indicator"></div>
+      </div>
+      <div class="preview-text" id="preview-post-text"></div>
+      <div class="preview-actions">
+        <span>💬 Reply</span>
+        <span>🔁 Repost</span>
+        <span>❤️ Like</span>
+        <span>📤 Share</span>
+      </div>
+    </div>
+
+    <!-- Media suggestions -->
+    <div id="media-section" style="display: none">
+      <div
+        style="
+          font-size: 0.8rem;
+          color: var(--subtext);
+          margin-bottom: 0.5rem;
+        "
+      >
+        📸 Suggested visuals for this post:
+      </div>
+      <div class="media-suggestions" id="media-list"></div>
+    </div>
+
+    <!-- Publish actions -->
+    <div class="publish-actions">
+      <button class="btn btn-success" onclick="runPublish()">
+        Publish to Bluesky
+      </button>
+
+      <!-- Platform icons -->
+      <div class="platform-icons">
+        <div class="platform-icon active" title="Bluesky">
+          🦋
+          <div class="tooltip">Bluesky — Active</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Twitter/X')"
+        >
+          𝕏
+          <div class="tooltip">Twitter/X — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Instagram')"
+        >
+          📸
+          <div class="tooltip">Instagram — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'LinkedIn')"
+        >
+          in
+          <div class="tooltip">LinkedIn — Coming Soon</div>
+        </div>
+        <div
+          class="platform-icon"
+          onclick="showComingSoon(this, 'Facebook')"
+        >
+          f
+          <div class="tooltip">Facebook — Coming Soon</div>
+        </div>
+      </div>
+
+      <span
+        style="font-size: 0.8rem; color: var(--subtext)"
+        id="publish-meta"
+      ></span>
+    </div>
+  </div>
+</div>
+
+      <!-- History -->
+      <div class="section">
+        <div class="section-title">
+          <div class="section-title-left">📜 Publish History</div>
+        </div>
+        <div id="history-list">
+          <div class="empty">No posts published yet</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE_URL = "https://slp-social-media-engine.onrender.com";
+      const apiFetch = (path, options = {}) => fetch(`${API_BASE_URL}${path}`, options);
+
+      let detectedTrends = [];
+      let generatedPosts = [];
+      let selectedPost = null;
+
+      // ── Theme ──────────────────────────────────────────────────
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute("data-theme") === "dark";
+        html.setAttribute("data-theme", isDark ? "light" : "dark");
+        document.getElementById("theme-btn").textContent = isDark
+          ? "🌙 Dark"
+          : "☀️ Light";
+      }
+
+      // ── Voice chips ────────────────────────────────────────────
+      function toggleVoice(el) {
+        el.classList.toggle("selected");
+      }
+
+      function getSelectedVoice() {
+        const chips = document.querySelectorAll(".voice-chip.selected");
+        return Array.from(chips)
+          .map((c) => c.textContent)
+          .join(", ");
+      }
+
+      // ── Keyword suggestion ─────────────────────────────────────
+      async function suggestKeywords() {
+        const product = document.getElementById("cfg-product").value;
+        if (!product.trim()) {
+          alert("Please fill in your Product Description first.");
+          return;
+        }
+        log("Suggesting keywords from product description...");
+        try {
+          const r = await apiFetch("/api/suggest-keywords", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ product }),
+          });
+          const data = await r.json();
+          if (data.success) {
+            document.getElementById("cfg-keywords").value = data.keywords;
+            log("Keywords suggested successfully", "success");
+          } else {
+            log("Suggestion failed: " + data.error, "error");
+          }
+        } catch (e) {
+          log("Error: " + e.message, "error");
+        }
+      }
+
+      // ── Log ────────────────────────────────────────────────────
+      function log(msg, type = "") {
+        const el = document.getElementById("log");
+        const line = document.createElement("div");
+        line.className = "log-line " + type;
+        line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        el.appendChild(line);
+        el.scrollTop = el.scrollHeight;
+      }
+
+      function setStep(n) {
+        for (let i = 1; i <= 3; i++)
+          document.getElementById(`step${i}-card`).classList.remove("active");
+        document.getElementById(`step${n}-card`).classList.add("active");
+      }
+
+      // ── Detect ─────────────────────────────────────────────────
+      async function runDetect() {
+        const btn = document.getElementById("btn-detect");
+        btn.innerHTML = '<span class="spinner"></span>Detecting...';
+        btn.disabled = true;
+        setStep(1);
+        log("Starting trend detection...");
+        const keywords = document.getElementById("cfg-keywords").value;
+        const product = document.getElementById("cfg-product").value;
+        const voice = getSelectedVoice();
+        try {
+          const r = await apiFetch("/api/detect", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ keywords, product, voice }),
+          });
+          const data = await r.json();
+          if (data.success) {
+            detectedTrends = data.trends;
+            log(`Found ${data.trends.length} trending topics`, "success");
+            renderTrends(data.trends);
+            document.getElementById("stat-trends").textContent =
+              data.trends.length;
+            document.getElementById("btn-generate").disabled = false;
+          } else {
+            log("Detection failed: " + data.error, "error");
+          }
+        } catch (e) {
+          log("Error: " + e.message, "error");
+        }
+        btn.innerHTML = "🔍 Detect Trends";
+        btn.disabled = false;
+      }
+
+      function renderTrends(trends) {
+        const grid = document.getElementById("trends-grid");
+        const maxScore = Math.max(...trends.map((t) => t.score));
+        grid.innerHTML = trends
+          .map(
+            (t) => `
+        <div class="trend-card">
+          <div class="trend-keyword">${t.keyword}</div>
+          <div class="trend-score">Score: ${t.score} | Posts: ${t.post_count}</div>
+          <div class="score-bar"><div class="score-fill" style="width:${((t.score / maxScore) * 100).toFixed(0)}%"></div></div>
+          <div class="trend-preview">${t.top_post.substring(0, 120)}...</div>
+        </div>
+      `,
+          )
+          .join("");
+        document.getElementById("trends-section").style.display = "block";
+      }
+
+      // ── Generate ───────────────────────────────────────────────
+      async function runGenerate() {
+        const btn = document.getElementById("btn-generate");
+        btn.innerHTML = '<span class="spinner"></span>Generating...';
+        btn.disabled = true;
+        setStep(2);
+        log("Generating AI posts for trending topics...");
+        try {
+          const r = await apiFetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              trends: detectedTrends,
+              product: document.getElementById("cfg-product").value,
+              voice: getSelectedVoice(),
+              min_length: document.getElementById("cfg-min-length").value,
+              max_length: document.getElementById("cfg-max-length").value,
+            }),
+          });
+          const data = await r.json();
+          if (data.success) {
+            generatedPosts = data.posts;
+            log(`Generated ${data.posts.length} post candidates`, "success");
+            renderPosts(data.posts);
+            selectPost(data.posts[0], 0);
+            document.getElementById("posts-section").style.display = "block";
+          } else {
+            log("Generation failed: " + data.error, "error");
+          }
+        } catch (e) {
+          log("Error: " + e.message, "error");
+        }
+        btn.innerHTML = "✨ Generate Posts";
+        btn.disabled = false;
+      }
+
+      function renderPosts(posts) {
+        const list = document.getElementById("posts-list");
+        list.innerHTML = posts
+          .map(
+            (p, i) => `
+        <div class="post-card" id="post-${i}" onclick="selectPost(${JSON.stringify(p).replace(/"/g, "&quot;")}, ${i})">
+          <div class="post-text">${p.text}</div>
+          <div class="post-meta">
+            <span><span class="badge badge-teal">${p.keyword}</span></span>
+            <span>Score: ${p.score}</span>
+            <span>${p.length} chars</span>
+            <span>Sentiment: ${p.sentiment > 0 ? "+" : ""}${p.sentiment}</span>
+            ${i === 0 ? '<span><span class="badge badge-green">⭐ Best</span></span>' : ""}
+          </div>
+        </div>
+      `,
+          )
+          .join("");
+      }
+
+      function selectPost(post, idx = 0) {
+        selectedPost = post;
+        document
+          .querySelectorAll(".post-card")
+          .forEach((c) => c.classList.remove("selected"));
+        const card = document.getElementById(`post-${idx}`);
+        if (card) card.classList.add("selected");
+
+        // Update preview
+        document.getElementById("preview-post-text").textContent = post.text;
+        document.getElementById("publish-meta").textContent =
+          `Keyword: ${post.keyword} | Score: ${post.score} | ${post.length} chars`;
+        document.getElementById("publish-section").style.display = "block";
+
+        // Timing indicator
+        const score = post.trend_score || 500;
+        const timing =
+          score > 400
+            ? '<span class="timing-badge timing-now">🟢 Post Now — Trend Peaking</span>'
+            : '<span class="timing-badge timing-wait">🟡 Good Time — Trend Growing</span>';
+        document.getElementById("timing-indicator").innerHTML = timing;
+
+        // Media suggestions
+        suggestMedia(post.text, post.keyword);
+        setStep(3);
+      }
+
+      function suggestMedia(text, keyword) {
+        const suggestions = generateMediaSuggestions(text, keyword);
+        const mediaList = document.getElementById("media-list");
+        mediaList.innerHTML = suggestions
+          .map(
+            (s) => `
+        <div class="media-chip">${s.icon} ${s.label}</div>
+      `,
+          )
+          .join("");
+        document.getElementById("media-section").style.display = "block";
+      }
+
+      function generateMediaSuggestions(text, keyword) {
+        const lower = text.toLowerCase();
+        const suggestions = [];
+
+        if (
+          lower.includes("ai") ||
+          lower.includes("tech") ||
+          lower.includes("tool")
+        )
+          suggestions.push({
+            icon: "🤖",
+            label: 'Search: "AI productivity illustration"',
+          });
+        if (
+          lower.includes("cricket") ||
+          lower.includes("ipl") ||
+          lower.includes("match")
+        )
+          suggestions.push({
+            icon: "🏏",
+            label: 'Search: "cricket match celebration"',
+          });
+        if (
+          lower.includes("food") ||
+          lower.includes("restaurant") ||
+          lower.includes("eat")
+        )
+          suggestions.push({
+            icon: "🍔",
+            label: 'Search: "food photography flat lay"',
+          });
+        if (
+          lower.includes("gym") ||
+          lower.includes("fitness") ||
+          lower.includes("workout")
+        )
+          suggestions.push({
+            icon: "💪",
+            label: 'Search: "gym motivation aesthetic"',
+          });
+        if (
+          lower.includes("startup") ||
+          lower.includes("founder") ||
+          lower.includes("business")
+        )
+          suggestions.push({
+            icon: "🚀",
+            label: 'Search: "startup hustle minimal"',
+          });
+
+        suggestions.push({ icon: "😂", label: `Meme: "${keyword} be like"` });
+        suggestions.push({
+          icon: "📊",
+          label: "Infographic: Stats about this trend",
+        });
+        suggestions.push({ icon: "🎬", label: "Reel idea: 15-sec hot take" });
+
+        return suggestions.slice(0, 4);
+      }
+
+      // ── Publish ────────────────────────────────────────────────
+      async function runPublish() {
+        if (!selectedPost) return;
+        const btn = document.querySelector("#publish-section .btn-success");
+        btn.innerHTML = '<span class="spinner"></span>Publishing...';
+        btn.disabled = true;
+        log("Publishing to Bluesky...");
+        try {
+          const r = await apiFetch("/api/publish", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ post: selectedPost }),
+          });
+          const data = await r.json();
+          if (data.success) {
+            log("Post published successfully!", "success");
+            log("Live at: " + data.profile, "success");
+            const publishBox = document.querySelector(".publish-box");
+            publishBox.innerHTML = `
+            <div style="text-align:center;padding:1rem">
+              <div style="font-size:2rem;margin-bottom:0.5rem">✅</div>
+              <div style="font-size:1.1rem;font-weight:600;color:#4ade80;margin-bottom:0.5rem">Published Successfully!</div>
+              <div style="font-size:0.85rem;color:var(--subtext);margin-bottom:1rem">${selectedPost.text}</div>
+              <a href="${data.profile}" target="_blank" style="color:#4ECDC4;font-size:0.85rem;text-decoration:none">View on Bluesky →</a>
+            </div>
+          `;
+            loadHistory();
+            updateStats();
+          } else {
+            log("Publish failed: " + data.error, "error");
+            btn.innerHTML = "Publish to Bluesky";
+            btn.disabled = false;
+          }
+        } catch (e) {
+          log("Error: " + e.message, "error");
+          btn.innerHTML = "Publish to Bluesky";
+          btn.disabled = false;
+        }
+      }
+
+      function showComingSoon(el, platform) {
+        log(`${platform} integration coming soon!`, "");
+      }
+
+      // ── History ────────────────────────────────────────────────
+      async function loadHistory() {
+        try {
+          const r = await apiFetch("/api/history");
+          const data = await r.json();
+          const list = document.getElementById("history-list");
+          if (data.success && data.history.length > 0) {
+            list.innerHTML = data.history
+              .reverse()
+              .map(
+                (h) => `
+            <div class="history-item">
+              <div class="history-text">${h.text}</div>
+              <div class="history-meta">
+                <div><span class="badge badge-teal">${h.keyword}</span></div>
+                <div style="margin-top:4px">${new Date(h.published_at).toLocaleString()}</div>
+              </div>
+            </div>
+          `,
+              )
+              .join("");
+            document.getElementById("stat-posts").textContent =
+              data.history.length;
+            const last = data.history[data.history.length - 1];
+            if (last)
+              document.getElementById("stat-time").textContent = new Date(
+                last.published_at,
+              ).toLocaleTimeString();
+          }
+        } catch (e) {}
+      }
+
+      function updateLengthLabel() {
+        const min = document.getElementById("cfg-min-length").value;
+        const max = document.getElementById("cfg-max-length").value;
+        document.getElementById("length-label").textContent =
+          `${min} to ${max} characters`;
+      }
+
+      function updateStats() {
+        if (generatedPosts.length > 0) {
+          const avg =
+            generatedPosts.reduce((s, p) => s + p.score, 0) /
+            generatedPosts.length;
+          document.getElementById("stat-score").textContent = avg.toFixed(2);
+        }
+      }
+
+      loadHistory();
+    </script>
+  </body>
+</html>
