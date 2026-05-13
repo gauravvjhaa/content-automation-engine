@@ -581,25 +581,193 @@
     </div>
 
     <div class="container">
-      <!-- Stats -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value" id="stat-posts">—</div>
-          <div class="stat-label">Posts Published</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="stat-trends">—</div>
-          <div class="stat-label">Trends Detected</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="stat-score">—</div>
-          <div class="stat-label">Avg Post Score</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="stat-time">—</div>
-          <div class="stat-label">Last Published</div>
+      <!-- Hero Banner -->
+      <div
+        id="hero-banner"
+        style="
+          margin-bottom: 1.5rem;
+          background: linear-gradient(135deg, #1a1a2e 0%, #0f0f2a 100%);
+          border: 1px solid #2a2a4a;
+          border-radius: 16px;
+          padding: 2rem;
+          position: relative;
+          overflow: hidden;
+        "
+      >
+        <div
+          style="
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: radial-gradient(
+              ellipse at right,
+              #4ecdc415 0%,
+              transparent 70%
+            );
+            pointer-events: none;
+          "
+        ></div>
+        <div
+          style="
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+          "
+        >
+          <div style="flex: 1; min-width: 260px">
+            <div
+              style="
+                font-size: 1.6rem;
+                font-weight: 700;
+                color: #4ecdc4;
+                margin-bottom: 0.4rem;
+              "
+            >
+              Detect. Generate. Publish. 🚀
+            </div>
+            <div
+              style="
+                font-size: 0.95rem;
+                color: var(--subtext);
+                line-height: 1.6;
+                margin-bottom: 1.2rem;
+                max-width: 520px;
+              "
+            >
+              TrendEngine monitors social media in real time, finds what's
+              trending in your niche, writes AI-powered posts that feel human,
+              and publishes them — all in under 5 minutes. No manual scrolling.
+              No blank page staring. Just results.
+            </div>
+            <div
+              style="
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <div
+                style="
+                  background: #4ecdc415;
+                  border: 1px solid #4ecdc440;
+                  border-radius: 999px;
+                  padding: 4px 14px;
+                  font-size: 0.8rem;
+                  color: #4ecdc4;
+                "
+              >
+                ⚡ Real-time trend detection
+              </div>
+              <div
+                style="
+                  background: #ff6b3515;
+                  border: 1px solid #ff6b3540;
+                  border-radius: 999px;
+                  padding: 4px 14px;
+                  font-size: 0.8rem;
+                  color: #ff6b35;
+                "
+              >
+                🤖 AI content generation
+              </div>
+              <div
+                style="
+                  background: #a29bfe15;
+                  border: 1px solid #a29bfe40;
+                  border-radius: 999px;
+                  padding: 4px 14px;
+                  font-size: 0.8rem;
+                  color: #a29bfe;
+                "
+              >
+                📤 Auto-publish to Bluesky
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                flex-wrap: wrap;
+              "
+            >
+              <button
+                onclick="dismissHero()"
+                style="
+                  background: #4ecdc4;
+                  color: #0f0f1a;
+                  border: none;
+                  border-radius: 8px;
+                  padding: 0.6rem 1.4rem;
+                  font-size: 0.9rem;
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+              >
+                Get Started →
+              </button>
+              <div style="font-size: 0.8rem; color: var(--subtext)">
+                <span style="color: #4ade80">●</span>
+                <span id="stat-posts-hero">—</span> posts published so far
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 0.6rem;
+              min-width: 180px;
+            "
+          >
+            <div
+              style="
+                background: #ffffff08;
+                border: 1px solid #ffffff10;
+                border-radius: 10px;
+                padding: 0.75rem 1rem;
+              "
+            >
+              <div
+                style="font-size: 1.4rem; font-weight: 700; color: var(--text)"
+                id="stat-posts"
+              >
+                —
+              </div>
+              <div style="font-size: 0.75rem; color: var(--subtext)">
+                Posts Published
+              </div>
+            </div>
+            <div
+              style="
+                background: #ffffff08;
+                border: 1px solid #ffffff10;
+                border-radius: 10px;
+                padding: 0.75rem 1rem;
+              "
+            >
+              <div
+                style="font-size: 1.4rem; font-weight: 700; color: var(--text)"
+                id="stat-time"
+              >
+                —
+              </div>
+              <div style="font-size: 0.75rem; color: var(--subtext)">
+                Last Published
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- hidden stat elements kept for JS compatibility -->
+      <span id="stat-trends" style="display: none"></span>
+      <span id="stat-score" style="display: none"></span>
 
       <!-- Pipeline -->
       <div class="pipeline">
@@ -702,7 +870,7 @@ A platform that automates social media content by detecting trends early and gen
 
           <div class="config-item" style="grid-column: span 2">
             <label
-              >Post Length Range —
+              >Generated Post Length —
               <span id="length-label">100 to 280 characters</span></label
             >
             <div
@@ -742,7 +910,8 @@ A platform that automates social media content by detecting trends early and gen
             <div
               style="font-size: 11px; color: var(--subtext); margin-top: 4px"
             >
-              Teal = minimum &nbsp;|&nbsp; Orange = maximum
+              Controls how long the AI-written posts will be — not related to
+              detection
             </div>
           </div>
         </div>
@@ -798,97 +967,98 @@ A platform that automates social media content by detecting trends early and gen
         <div id="posts-list"></div>
       </div>
 
-<!-- Publish Box -->
-<div class="section" id="publish-section" style="display: none">
-  <div class="publish-box">
-    <div class="section-title">
-      <div class="section-title-left">🚀 Ready to Publish</div>
-    </div>
+      <!-- Publish Box -->
+      <div class="section" id="publish-section" style="display: none">
+        <div class="publish-box">
+          <div class="section-title">
+            <div class="section-title-left">🚀 Ready to Publish</div>
+          </div>
 
-    <!-- Post Preview -->
-    <div class="post-preview">
-      <div class="preview-header">
-        <div class="preview-avatar">V</div>
-        <div>
-          <div class="preview-name">Vishwajeet Yaduraj</div>
-          <div class="preview-handle">
-            @vishuyadav.bsky.social · just now
+          <!-- Post Preview -->
+          <div class="post-preview">
+            <div class="preview-header">
+              <div class="preview-avatar">V</div>
+              <div>
+                <div class="preview-name">Vishwajeet Yaduraj</div>
+                <div class="preview-handle">
+                  @vishuyadav.bsky.social · just now
+                </div>
+              </div>
+              <div style="margin-left: auto" id="timing-indicator"></div>
+            </div>
+            <div class="preview-text" id="preview-post-text"></div>
+            <div class="preview-actions">
+              <span>💬 Reply</span>
+              <span>🔁 Repost</span>
+              <span>❤️ Like</span>
+              <span>📤 Share</span>
+            </div>
+          </div>
+
+          <!-- Media suggestions -->
+          <div id="media-section" style="display: none; margin-top: 1rem">
+            <div
+              style="
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 0.75rem;
+              "
+            >
+              💡 Content suggestions for this post
+            </div>
+            <div id="media-list"></div>
+          </div>
+
+          <!-- Publish actions -->
+          <div class="publish-actions">
+            <button class="btn btn-success" onclick="runPublish()">
+              Publish to Bluesky
+            </button>
+
+            <!-- Platform icons -->
+            <div class="platform-icons">
+              <div class="platform-icon active" title="Bluesky">
+                🦋
+                <div class="tooltip">Bluesky — Active</div>
+              </div>
+              <div
+                class="platform-icon"
+                onclick="showComingSoon(this, 'Twitter/X')"
+              >
+                𝕏
+                <div class="tooltip">Twitter/X — Coming Soon</div>
+              </div>
+              <div
+                class="platform-icon"
+                onclick="showComingSoon(this, 'Instagram')"
+              >
+                📸
+                <div class="tooltip">Instagram — Coming Soon</div>
+              </div>
+              <div
+                class="platform-icon"
+                onclick="showComingSoon(this, 'LinkedIn')"
+              >
+                in
+                <div class="tooltip">LinkedIn — Coming Soon</div>
+              </div>
+              <div
+                class="platform-icon"
+                onclick="showComingSoon(this, 'Facebook')"
+              >
+                f
+                <div class="tooltip">Facebook — Coming Soon</div>
+              </div>
+            </div>
+
+            <span
+              style="font-size: 0.8rem; color: var(--subtext)"
+              id="publish-meta"
+            ></span>
           </div>
         </div>
-        <div style="margin-left: auto" id="timing-indicator"></div>
       </div>
-      <div class="preview-text" id="preview-post-text"></div>
-      <div class="preview-actions">
-        <span>💬 Reply</span>
-        <span>🔁 Repost</span>
-        <span>❤️ Like</span>
-        <span>📤 Share</span>
-      </div>
-    </div>
-
-    <!-- Media suggestions -->
-    <div id="media-section" style="display: none">
-      <div
-        style="
-          font-size: 0.8rem;
-          color: var(--subtext);
-          margin-bottom: 0.5rem;
-        "
-      >
-        📸 Suggested visuals for this post:
-      </div>
-      <div class="media-suggestions" id="media-list"></div>
-    </div>
-
-    <!-- Publish actions -->
-    <div class="publish-actions">
-      <button class="btn btn-success" onclick="runPublish()">
-        Publish to Bluesky
-      </button>
-
-      <!-- Platform icons -->
-      <div class="platform-icons">
-        <div class="platform-icon active" title="Bluesky">
-          🦋
-          <div class="tooltip">Bluesky — Active</div>
-        </div>
-        <div
-          class="platform-icon"
-          onclick="showComingSoon(this, 'Twitter/X')"
-        >
-          𝕏
-          <div class="tooltip">Twitter/X — Coming Soon</div>
-        </div>
-        <div
-          class="platform-icon"
-          onclick="showComingSoon(this, 'Instagram')"
-        >
-          📸
-          <div class="tooltip">Instagram — Coming Soon</div>
-        </div>
-        <div
-          class="platform-icon"
-          onclick="showComingSoon(this, 'LinkedIn')"
-        >
-          in
-          <div class="tooltip">LinkedIn — Coming Soon</div>
-        </div>
-        <div
-          class="platform-icon"
-          onclick="showComingSoon(this, 'Facebook')"
-        >
-          f
-          <div class="tooltip">Facebook — Coming Soon</div>
-        </div>
-      </div>
-
-      <span
-        style="font-size: 0.8rem; color: var(--subtext)"
-        id="publish-meta"
-      ></span>
-    </div>
-  </div>
-</div>
 
       <!-- History -->
       <div class="section">
@@ -902,12 +1072,26 @@ A platform that automates social media content by detecting trends early and gen
     </div>
 
     <script>
-      const API_BASE_URL = "https://slp-social-media-engine.onrender.com";
-      const apiFetch = (path, options = {}) => fetch(`${API_BASE_URL}${path}`, options);
+      // const API_BASE_URL = "https://slp-social-media-engine.onrender.com";
+      const API_BASE_URL = "http://localhost:5000";
+      const apiFetch = (path, options = {}) =>
+        fetch(`${API_BASE_URL}${path}`, options);
 
       let detectedTrends = [];
       let generatedPosts = [];
       let selectedPost = null;
+
+      function dismissHero() {
+        const hero = document.getElementById("hero-banner");
+        hero.style.transition = "all 0.4s ease";
+        hero.style.opacity = "0";
+        hero.style.maxHeight = "0";
+        hero.style.marginBottom = "0";
+        hero.style.padding = "0";
+        setTimeout(() => {
+          hero.style.display = "none";
+        }, 400);
+      }
 
       // ── Theme ──────────────────────────────────────────────────
       function toggleTheme() {
@@ -1109,76 +1293,261 @@ A platform that automates social media content by detecting trends early and gen
       }
 
       function suggestMedia(text, keyword) {
-        const suggestions = generateMediaSuggestions(text, keyword);
         const mediaList = document.getElementById("media-list");
-        mediaList.innerHTML = suggestions
-          .map(
-            (s) => `
-        <div class="media-chip">${s.icon} ${s.label}</div>
-      `,
-          )
-          .join("");
+        const lower = text.toLowerCase();
+
+        // Build visual suggestion
+        const visual = getVisualSuggestion(lower, text);
+
+        // Build meme suggestion — only if content demands it
+        const meme = getMemeSuggestion(lower, text);
+
+        let html = "";
+
+        // Visual card — always shown
+        html += `
+    <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:0.75rem">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.6rem">
+        <span style="font-size:1rem">🖼️</span>
+        <span style="font-size:0.85rem;font-weight:600;color:#4ecdc4">Visual Suggestion</span>
+      </div>
+      <div style="font-size:0.85rem;color:var(--text);line-height:1.6;margin-bottom:0.6rem">
+        <strong>What to use:</strong> ${visual.description}
+      </div>
+      <div style="font-size:0.8rem;color:var(--subtext);margin-bottom:0.75rem">
+        🔍 <strong>Search on Google/Unsplash:</strong> <span style="color:#4ecdc4;font-style:italic">"${visual.searchTerm}"</span>
+      </div>
+      <button onclick="copyPrompt('${visual.aiPrompt.replace(/'/g, "\\'")}')"
+        style="background:transparent;border:1px solid #a29bfe;color:#a29bfe;border-radius:6px;padding:4px 12px;font-size:0.75rem;cursor:pointer;display:flex;align-items:center;gap:6px">
+        ✨ Copy AI Image Prompt
+      </button>
+    </div>
+  `;
+
+        // Meme card — only if relevant
+        if (meme) {
+          html += `
+      <div style="background:var(--input-bg);border:1px solid var(--border);border-radius:10px;padding:1rem">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.6rem">
+          <span style="font-size:1rem">😂</span>
+          <span style="font-size:0.85rem;font-weight:600;color:#ff6b35">Meme Suggestion</span>
+          <span style="font-size:0.7rem;background:#ff6b3520;color:#ff6b35;border-radius:999px;padding:2px 8px">fits this content</span>
+        </div>
+        <div style="font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">
+          ${meme.name}
+        </div>
+        <div style="font-size:0.8rem;color:var(--subtext);line-height:1.6;margin-bottom:0.6rem">
+          ${meme.explanation}
+        </div>
+        <div style="font-size:0.8rem;color:var(--subtext)">
+          🔍 <strong>Search on Google:</strong> <span style="color:#ff6b35;font-style:italic">"${meme.searchTerm}"</span>
+        </div>
+      </div>
+    `;
+        }
+
+        mediaList.innerHTML = html;
         document.getElementById("media-section").style.display = "block";
       }
 
-      function generateMediaSuggestions(text, keyword) {
-        const lower = text.toLowerCase();
-        const suggestions = [];
+      function copyPrompt(prompt) {
+        navigator.clipboard.writeText(prompt).then(() => {
+          log("AI image prompt copied to clipboard!", "success");
+        });
+      }
 
+      function getVisualSuggestion(lower, text) {
         if (
           lower.includes("ai") ||
-          lower.includes("tech") ||
-          lower.includes("tool")
-        )
-          suggestions.push({
-            icon: "🤖",
-            label: 'Search: "AI productivity illustration"',
-          });
+          lower.includes("automation") ||
+          lower.includes("tool") ||
+          lower.includes("tech")
+        ) {
+          return {
+            description:
+              "A clean, minimal workspace with a laptop glowing with code or a dashboard, showing automation in action. No clutter — just focused productivity.",
+            searchTerm: "AI productivity workspace minimal aesthetic",
+            aiPrompt:
+              "A clean minimal desk setup with a glowing laptop showing a dashboard, soft blue ambient light, flat lay perspective, professional aesthetic, no text",
+          };
+        }
         if (
           lower.includes("cricket") ||
           lower.includes("ipl") ||
-          lower.includes("match")
-        )
-          suggestions.push({
-            icon: "🏏",
-            label: 'Search: "cricket match celebration"',
-          });
+          lower.includes("match") ||
+          lower.includes("rcb") ||
+          lower.includes("csk")
+        ) {
+          return {
+            description:
+              "A cricket stadium at night with stadium lights blazing and a packed crowd, capturing the energy of an IPL match.",
+            searchTerm: "IPL cricket stadium night crowd lights",
+            aiPrompt:
+              "Cricket stadium at night, bright floodlights, massive cheering crowd, dramatic wide angle, vibrant colors, no text",
+          };
+        }
         if (
           lower.includes("food") ||
           lower.includes("restaurant") ||
-          lower.includes("eat")
-        )
-          suggestions.push({
-            icon: "🍔",
-            label: 'Search: "food photography flat lay"',
-          });
+          lower.includes("eat") ||
+          lower.includes("biryani")
+        ) {
+          return {
+            description:
+              "A top-down flat lay of the food being discussed, on a clean wooden or marble surface with minimal props — fork, napkin, ambient natural light.",
+            searchTerm: "food photography flat lay natural light",
+            aiPrompt:
+              "Top-down flat lay of delicious Indian food on marble surface, natural window light, minimal props, food photography style, no text",
+          };
+        }
         if (
           lower.includes("gym") ||
           lower.includes("fitness") ||
-          lower.includes("workout")
-        )
-          suggestions.push({
-            icon: "💪",
-            label: 'Search: "gym motivation aesthetic"',
-          });
+          lower.includes("workout") ||
+          lower.includes("muscle")
+        ) {
+          return {
+            description:
+              "A person mid-workout in a gym — lifting weights or doing pull-ups — dramatic side lighting, high contrast, motivational energy.",
+            searchTerm: "gym workout motivation aesthetic photography",
+            aiPrompt:
+              "Person lifting weights in a dark gym, dramatic side lighting, high contrast black and white, athletic physique, motivational aesthetic, no text",
+          };
+        }
         if (
           lower.includes("startup") ||
           lower.includes("founder") ||
-          lower.includes("business")
-        )
-          suggestions.push({
-            icon: "🚀",
-            label: 'Search: "startup hustle minimal"',
-          });
+          lower.includes("business") ||
+          lower.includes("entrepreneur")
+        ) {
+          return {
+            description:
+              "A confident person at a whiteboard covered in ideas and diagrams, or a minimalist office with sticky notes — capturing the founder hustle energy.",
+            searchTerm: "startup founder whiteboard brainstorm minimal office",
+            aiPrompt:
+              "Entrepreneur at a whiteboard with diagrams and sticky notes, bright modern office, confident pose, startup energy, no text",
+          };
+        }
+        if (
+          lower.includes("social media") ||
+          lower.includes("content") ||
+          lower.includes("creator") ||
+          lower.includes("trend")
+        ) {
+          return {
+            description:
+              "A person filming themselves for social media — ring light, phone on tripod, looking engaged and expressive. Clean, modern, relatable.",
+            searchTerm: "content creator filming ring light phone social media",
+            aiPrompt:
+              "Young content creator filming with a smartphone on a tripod, ring light setup, bright modern room, expressive and engaged, no text",
+          };
+        }
+        // Default
+        return {
+          description:
+            "A clean, vibrant image that matches the mood and topic of your post. Choose something bold that stops the scroll — avoid stock-photo clichés like handshakes or generic business people.",
+          searchTerm: `${text.split(" ").slice(0, 4).join(" ")} photography aesthetic`,
+          aiPrompt: `High quality photograph representing: ${text.substring(0, 80)}, professional photography, vibrant colors, no text, no watermark`,
+        };
+      }
 
-        suggestions.push({ icon: "😂", label: `Meme: "${keyword} be like"` });
-        suggestions.push({
-          icon: "📊",
-          label: "Infographic: Stats about this trend",
-        });
-        suggestions.push({ icon: "🎬", label: "Reel idea: 15-sec hot take" });
-
-        return suggestions.slice(0, 4);
+      function getMemeSuggestion(lower, text) {
+        if (
+          lower.includes("ai") &&
+          (lower.includes("replace") ||
+            lower.includes("job") ||
+            lower.includes("human"))
+        ) {
+          return {
+            name: 'Terminator / "I\'ll be back" meme',
+            explanation:
+              "The classic Terminator robot pointing at the viewer. Used when AI or technology is being portrayed as an unstoppable force coming for something. Perfect when the post talks about AI replacing or disrupting something.",
+            searchTerm: "Terminator Ill be back meme template",
+          };
+        }
+        if (
+          lower.includes("trend") ||
+          lower.includes("everyone") ||
+          lower.includes("suddenly") ||
+          lower.includes("late")
+        ) {
+          return {
+            name: "Distracted Boyfriend meme",
+            explanation:
+              "Man (labeled 'users' or 'brands') looking at a passing woman (labeled 'new trend') while ignoring his girlfriend (labeled 'their current content'). Iconic for showing how everyone chases new trends. One of the most universally recognised memes globally.",
+            searchTerm: "Distracted Boyfriend meme template",
+          };
+        }
+        if (
+          lower.includes("easy") ||
+          lower.includes("simple") ||
+          lower.includes("just") ||
+          lower.includes("automat")
+        ) {
+          return {
+            name: "This is Fine dog meme",
+            explanation:
+              "A cartoon dog sitting calmly in a room on fire, sipping coffee and saying 'This is fine.' Indian social media uses this constantly. Great when something is chaotic but being presented as normal or easy — works well for automation content that solves painful problems.",
+            searchTerm: "This is Fine dog meme template",
+          };
+        }
+        if (
+          lower.includes("wait") ||
+          lower.includes("surprised") ||
+          lower.includes("finally") ||
+          lower.includes("actually")
+        ) {
+          return {
+            name: "Surprised Pikachu meme",
+            explanation:
+              "Pikachu with a wide open shocked mouth expression. Extremely popular in Indian Twitter/Instagram. Used when something obvious happens and everyone acts surprised. Good for content about obvious solutions or unexpected results.",
+            searchTerm: "Surprised Pikachu meme template",
+          };
+        }
+        if (
+          lower.includes("money") ||
+          lower.includes("save") ||
+          lower.includes("expensive") ||
+          lower.includes("cost") ||
+          lower.includes("free")
+        ) {
+          return {
+            name: "Paisa hi Paisa hoga (Mogambo / Bollywood money meme)",
+            explanation:
+              "A classic Indian meme using Bollywood villain energy around money. Hugely popular on Indian social media. Works perfectly for any content about saving money, getting value, or making money. Search for the Hindi money meme format.",
+            searchTerm: "Paisa hi Paisa hoga Indian meme template",
+          };
+        }
+        if (
+          lower.includes("growth") ||
+          lower.includes("improve") ||
+          lower.includes("better") ||
+          lower.includes("level up") ||
+          lower.includes("glow")
+        ) {
+          return {
+            name: "Glow Up meme / Before-After format",
+            explanation:
+              "Side-by-side before and after comparison format. Massively used in India and globally. Shows transformation — before using the product vs after. Simple, relatable, and drives engagement because everyone loves a transformation story.",
+            searchTerm: "Glow up before after meme template",
+          };
+        }
+        if (
+          lower.includes("why") ||
+          lower.includes("problem") ||
+          lower.includes("issue") ||
+          lower.includes("difficult") ||
+          lower.includes("hard")
+        ) {
+          return {
+            name: "Bachpan Ka Pyaar / Bhai Kya Kar Raha Hai meme",
+            explanation:
+              "A popular Indian meme format showing confused or exasperated reactions. Used widely on Indian Twitter and Instagram reels. Perfect for content about relatable frustrations or problems that everyone faces. Very desi, very effective.",
+            searchTerm: "Bhai kya kar raha hai Indian meme template",
+          };
+        }
+        // No meme if content doesn't demand it
+        return null;
       }
 
       // ── Publish ────────────────────────────────────────────────
